@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>二手好房 - 搜索结果</title>
+    
+    <!-- 外部资源 -->
+    <link href="/static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.bootcss.com/jquery.bootstrapvalidator/0.5.3/css/bootstrapValidator.min.css" rel="stylesheet">
+    <link href="/static/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/static/css/clean-blog.min.css" rel="stylesheet">
+    <link href="/static/css/zxf_page.css" rel="stylesheet">
+
+    <style>
+        /* 基础样式 */
+        body {
+            padding-top: 56px; /* 导航栏高度 */
+        }
+        
+        .area-info {
+            margin-left: 5px;
+            padding-left: 5px;
+            font-size: 16px;
+            padding-bottom: 10px;
+            border-bottom: #ecf0f1 1px solid;
+        }
+
+        .info-line {
+            margin: 10px 0 55px 0;
+        }
+
+        .course-info span {
+            line-height: 37px;
+        }
+
+        .tj-header {
+            margin: 30px 0 10px;
+        }
+
+        .describe {
+            font-size: 15px;
+            color: #bdc3c7;
+        }
+
+        /* 房源列表样式 */
+        .collection-line {
+            padding: 15px 0;
+            margin: 15px 0;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .collection-line:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        .collection-line-info {
+            font-size: 14px;
+        }
+
+        .collection-line-info .title {
+            margin-bottom: 8px;
+        }
+
+        .collection-line-info .title a {
+            font-size: 20px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            text-decoration: none;
+            color: #333;
+            transition: color 0.3s;
+        }
+
+        .collection-line-info .title a:hover {
+            color: #17a2b8;
+        }
+
+        .collection-line-info .attribute-text {
+            font-weight: 400;
+            color: #6c757d;
+            letter-spacing: 0.4px;
+        }
+
+        .collection-line-info .info-text {
+            font-weight: 500;
+            color: #394043;
+            letter-spacing: 0.2px;
+        }
+
+        /* 价格与查看按钮 */
+        .price-box {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 100%;
+        }
+        
+        .price-box .price {
+            color: #e74c3c;
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .price-box .view-btn {
+            background-color: #17a2b8;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 4px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        
+        .price-box .view-btn:hover {
+            background-color: #138496;
+        }
+
+        /* 分页样式 */
+        .pagination {
+            justify-content: center;
+            margin-top: 30px;
+        }
+        
+        .page-item.active .page-link {
+            background-color: #17a2b8;
+            border-color: #17a2b8;
+        }
+        
+        .page-link {
+            color: #17a2b8;
+        }
+        
+        .page-link:hover {
+            color: #138496;
+        }
+
+        /* 空结果提示 */
+        .empty-result {
+            text-align: center;
+            padding: 50px 0;
+        }
+        
+        .empty-result i {
+            font-size: 48px;
+            color: #6c757d;
+            margin-bottom: 20px;
+        }
+        
+        .empty-result p {
+            font-size: 18px;
+            color: #6c757d;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+        <div class="container">
+            <a class="navbar-brand" href="/">二手好房</a>
+            <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+                data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
+                aria-label="Toggle navigation">
+                Menu <i class="fas fa-bars"></i>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    <li class="nav-item" id="user">
+                        {% if request.cookies.get('name') %}
+                        <!-- 登录状态：显示用户名 -->
+                        <a id='u_name' class="nav-link" href="/user/{{ request.cookies.get('name') }}">
+                            {{ request.cookies.get('name') }}
+                        </a>
+                        {% else %}
+                        <!-- 未登录：显示登录按钮 -->
+                        <a class="nav-link" data-toggle="modal" data-target="#login" href="javascript:;">登录</a>
+                        {% endif %}
+                    </li>
+
+                    {% if request.cookies.get('name') %}
+                    <li class="nav-item">
+                        <a class="nav-link" id="logout" href="/logout">退出登录</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 页头 -->
+    <header class="masthead" style="background-image: url('/static/img/home-bg.jpg')">
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-md-10 mx-auto">
+                    <div class="site-heading">
+                        <h1>二手好房</h1>
+                        <span class="subheading">给您推荐优质房源</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主内容区 -->
+    <div class="container">
+        <!-- 搜索结果标题 -->
+        <div class="row info-line">
+            <div class="col-lg-12 tj-header">
+                <h3>搜索结果</h3>
+                <div class="describe">
+                    {% if request.args.get('addr') %}
+                        <span>地区：{{ request.args.get('addr') }}</span>
+                    {% elif request.args.get('rooms') %}
+                        <span>户型：{{ request.args.get('rooms') }}</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- 房源列表 -->
+        <div class="row">
+            <div class="col-lg-12">
+                <!-- 检查是否有房源 -->
+                {% if house_list %}
+                    <div class="row">
+                        {% for house in house_list %}
+                        <div class="col-lg-12 mb-4">
+                            <div class="row collection-line">
+                                <div class="col-lg-4 col-md-4">
+                                    <a href="/house/{{ house.id }}">
+                                        <img class="img-fluid rounded" src="/static/img/house-bg1.jpg" 
+                                             alt="{{ house.title }}的房源图片" style="height: 200px; object-fit: cover;">
+                                    </a>
+                                </div>
+                                <div class="col-lg-6 col-md-6">
+                                    <div class="collection-line-info">
+                                        <div class="title">
+                                            <a href="/house/{{ house.id }}">{{ house.title|dealover }}</a>
+                                        </div>
+                                        <div class="mb-1">
+                                            <span class="attribute-text"><i class="fa fa-map-marker mr-1" aria-hidden="true"></i> 房源地址：</span>
+                                            <span class="info-text">{{ house.address }}</span>
+                                        </div>
+                                        <div class="mb-1">
+                                            <span class="attribute-text"><i class="fa fa-arrows mr-1" aria-hidden="true"></i> 建筑面积：</span>
+                                            <span class="info-text">{{ house.area }}平方米</span>
+                                        </div>
+                                        <div class="mb-1">
+                                            <span class="attribute-text"><i class="fa fa-th-large mr-1" aria-hidden="true"></i> 房源户型：</span>
+                                            <span class="info-text">{{ house.rooms }}</span>
+                                        </div>
+                                        <div class="mb-1">
+                                            <span class="attribute-text"><i class="fa fa-compass mr-1" aria-hidden="true"></i> 房源朝向：</span>
+                                            <span class="info-text">{{ house.direction|dealdirection }}</span>
+                                        </div>
+                                        <div class="mb-1">
+                                            <span class="attribute-text"><i class="fa fa-subway mr-1" aria-hidden="true"></i> 交通条件：</span>
+                                            <span class="info-text">{{ house.traffic|dealTraffic }}</span>
+                                        </div>
+                                        <div class="mt-2">
+                                            <span class="attribute-text">
+                                                <i class="fa fa-eye mr-1" aria-hidden="true"></i> {{ house.page_views }}人浏览过
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-2 col-md-2 price-box">
+                                    <div class="price">￥{{ house.price }}</div>
+                                    <a href="/house/{{ house.id }}" class="view-btn">
+                                        查看详情 <i class="fa fa-arrow-right ml-1" aria-hidden="true"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    
+                    <!-- 分页控件 -->
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="zxf_pagediv"></div>
+                        </div>
+                    </div>
+                {% else %}
+                    <!-- 无结果提示 -->
+                    <div class="empty-result">
+                        <i class="fa fa-search"></i>
+                        <p>{{ empty_message if empty_message else "暂无符合条件的房源" }}</p>
+                        <a href="/" class="btn btn-primary mt-3">返回首页</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <hr>
+
+    <!-- 页脚 -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-md-10 mx-auto">
+                    <p class="copyright text-muted">Copyright &copy; 二手好房 2019</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 外部脚本 -->
+    <script src="/static/vendor/jquery/jquery.min.js"></script>
+    <script src="/static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.bootcss.com/jquery.bootstrapvalidator/0.5.3/js/bootstrapValidator.min.js"></script>
+    <script src="/static/js/login.js"></script>
+    <script src="/static/js/zxf_page.js"></script>
+    <script src="/static/js/clean-blog.min.js"></script>
+
+    <!-- 分页脚本 -->
+    <script>
+        $(document).ready(function () {
+            // 初始化分页控件
+            var totalPages = {{ total_pages if total_pages is defined else 10 }}; // 总页数
+            var currentPage = {{ current_page if current_page is defined else 1 }}; // 当前页
+            
+            $(".zxf_pagediv").createPage({
+                pageNum: totalPages,
+                current: currentPage,
+                backfun: function(e) {
+                    console.log("切换到第" + e.current + "页");
+                    // 构建新的URL（保留搜索参数）
+                    var queryParams = {};
+                    {% for key, value in request.args.items() %}
+                        queryParams['{{ key }}'] = '{{ value }}';
+                    {% endfor %}
+                    queryParams['page'] = e.current;
+                    
+                    // 生成新URL
+                    var queryString = $.param(queryParams);
+                    window.location.href = '/query?' + queryString;
+                }
+            });
+
+            // 退出登录确认
+            $('#logout').click(function(e) {
+                if (!confirm("确定要退出登录吗？")) {
+                    e.preventDefault();
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

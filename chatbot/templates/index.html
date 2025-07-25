@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>华为牌智能聊天机器人</title>
+  <!-- 引入外部CSS -->
+  <link rel="stylesheet" href="../static/styles.css">
+</head>
+
+<body>
+  <div id="chat-container">
+    <!-- 头部 -->
+    <div id="header">
+      <h2>华为牌智能聊天机器人</h2>
+      <div id="config-info-container">
+        <!-- 配置信息展示区域 -->
+        <span id="config-info"></span>
+        <!-- 退出按钮 -->
+        <a href="{{ url_for('auth.logout') }}" class="logout-button">退出</a>
+      </div>
+    </div>
+
+    <!-- 聊天消息区域 -->
+    <!-- 聊天消息区域 -->
+    <div id="messages">
+      <!-- 历史聊天记录（从数据库加载） -->
+      {% for item in chat_history %}
+      {% if item.sender == 'user' %}
+      <!-- 用户消息 -->
+      <div class="msg user">
+        <div class="msg-content">
+          <div class="sender">你</div>
+          {{ item.message }}
+        </div>
+        <img class="avatar" src="../static/user.jpg" alt="用户">
+      </div>
+      {% else %}
+      <!-- 机器人消息 -->
+      <div class="msg bot">
+        <img class="avatar" src="../static/bot.jpg" alt="AI助手">
+        <div class="msg-content">
+          <div class="sender">AI助手</div>
+          {{ item.message }}
+        </div>
+      </div>
+      {% endif %}
+      {% endfor %}
+
+      <!-- 初始欢迎消息（如果没有历史记录，显示这条） -->
+      {% if not chat_history %}
+      <div class="msg bot">
+        <img class="avatar" src="../static/bot.jpg" alt="AI助手">
+        <div class="msg-content">
+          <div class="sender">AI助手</div>
+          你好！我是HUAWEI智能聊天机器人，有什么可以帮助你的吗？
+        </div>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- 输入区域 -->
+    <div id="input-area">
+      <label for="user-input"></label>
+      <input type="text" id="user-input" placeholder="请输入你的问题... " maxlength="1000" />
+      <div class="button-group">
+        <button id="send-btn" onclick="sendMessage()">发送</button>
+        <button id="clear-btn" onclick="clearChat()">清空</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 引入外部JavaScript -->
+  <script src="../static/script.js"></script>
+</body>
+
+</html>

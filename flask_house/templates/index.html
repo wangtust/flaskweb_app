@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>二手好房</title>
+    <!-- Icon -->
+    <link rel="icon" href="/static/img/favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="/static/img/favicon.ico" type="image/x-icon" />
+
+    <!-- Bootstrap core CSS -->
+    <link href="/static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.bootcss.com/jquery.bootstrapvalidator/0.5.3/css/bootstrapValidator.min.css" rel="stylesheet">
+
+    <!-- Custom fonts -->
+    <link href="/static/css/font-awesome.min.css" rel="stylesheet">
+
+    <!-- Custom styles -->
+    <link href="/static/css/clean-blog.min.css" rel="stylesheet">
+
+    <style>
+        /* 基础样式 */
+        .area-info {
+            margin-left: 5px;
+            padding-left: 5px;
+            font-size: 16px;
+            padding-bottom: 10px;
+            border-bottom: #ecf0f1 1px solid;
+        }
+
+        .info-line {
+            margin: 10px 0 55px 0;
+        }
+
+        .course {
+            margin-top: 10px;
+            padding: 7px 5px 0 5px;
+            background: #fff;
+            transition: box-shadow 0.3s;
+        }
+        .course:hover {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .course-info {
+            height: 37px;
+            font-weight: 500;
+            color: #333;
+            font-size: 16px;
+        }
+
+        .course-info1 {
+            height: 20px;
+            font-weight: 300;
+            font-size: 12px;
+        }
+
+        .course-info span {
+            line-height: 37px;
+        }
+
+        .price {
+            color: #e74c3c;
+            font-size: 14px;
+        }
+
+        .tj-header {
+            margin: 30px 0 10px;
+        }
+
+        .describe {
+            font-size: 15px;
+            color: #bdc3c7;
+        }
+
+        /* 登录相关 */
+        .login_form {
+            margin-top: 20px; /* 进一步上移弹窗，减少底部遮挡 */
+            z-index: 1050; /* 提高模态框层级，确保覆盖其他元素 */
+        }
+
+        .form-info {
+            font-size: 18px;
+            color: #2c3e50;
+        }
+
+        .switch-info {
+            font-size: 14px;
+            color: #2c3e50;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 2px;
+        }
+
+        /* 搜索框样式 */
+        .my-nav-tab {
+            border-bottom: none;
+        }
+
+        .chanle1, .chanle2 {
+            background-color: #ced4da;
+            font-size: 14px;
+            line-height: 30px;
+            color: #495057;
+            padding: 0 10px;
+            border-radius: 3px 3px 0 0;
+            cursor: pointer;
+        }
+
+        .chanle1 {
+            margin-right: 1px;
+        }
+
+        .chanle2 {
+            margin-left: 1px;
+        }
+
+        .chanle1.active, .chanle2.active {
+            background-color: #5bc0de;
+            color: #fff;
+            position: relative;
+        }
+
+        .my-btn {
+            padding: 9px 20px !important;
+            line-height: 18px;
+            border-radius: 0 !important;
+        }
+
+        #txt {
+            width: 658px !important;
+            border-radius: 0 !important;
+        }
+
+        #txt:focus {
+            box-shadow: none;
+        }
+
+        input::-webkit-input-placeholder {
+            font-size: 14px;
+        }
+
+        #my-form {
+            position: relative; /* 改为相对定位，避免与模态框冲突 */
+            z-index: 1000; /* 降低搜索框层级，确保模态框能覆盖 */
+        }
+
+        .li_style {
+            color: #495057;
+            font-size: 14px;
+            text-align: left;
+            width: 658px;
+            padding: 8px 14px;
+            cursor: pointer;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-top: none;
+        }
+
+        .li_style:hover {
+            background-color: #f5f5f5;
+        }
+
+        .chart {
+            height: 340px;
+        }
+
+        .chart-describion {
+            font-size: 15px;
+            color: #333;
+            text-align: center
+        }
+    </style>
+
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+        <div class="container">
+            <a class="navbar-brand" href="/">二手好房</a>
+            <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+                    data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                Menu
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+
+                    <li class="nav-item" id="user">
+                        {% if request.cookies.get('name') %}
+                        <!-- 登录状态 -->
+                        <a id='u_name' class="nav-link" href="/user/{{ request.cookies.get('name') }}">{{
+                            request.cookies.get('name') }}</a>
+                        {% else %}
+                        <!-- 未登录 -->
+                        <a class="nav-link" data-toggle="modal" data-target="#login" href="javascript:;">登录</a>
+                        {% endif %}
+                    </li>
+
+                    {% if request.cookies.get('name') %}
+                    <li class="nav-item">
+                        <a class="nav-link" id="logout" href="javascript:;">退出登录</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <header class="masthead" style="background-image: url('/static/img/home-bg.jpg')">
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-md-10 mx-auto">
+                    <div class="site-heading">
+                        <h1>二手好房</h1>
+                        <span class="subheading">给您推荐优质房源</span>
+
+                        <!-- 智能搜索功能 -->
+                        <div>
+                            <ul class="nav nav-tabs my-nav-tab" style="margin:15px 0 0 0">
+                                <li class="chanle1 active"><span>地区搜索</span></li>
+                                <li class="chanle2"><span>户型搜索</span></li>
+                            </ul>
+                            <form class="form-inline" role="form" id="my-form" action="/query">
+                                <div class="form-group">
+                                    <label class="sr-only" for="txt">名称</label>
+                                    <input type="text" class="form-control" id="txt" name='addr'
+                                        placeholder="请输入区域、商圈或小区名开始找房">
+                                </div>
+                                <button type="submit" class="my-btn btn btn-info" id="btn">提交</button>
+                                <ul id="list" class="list-group">
+                                    <!-- 联想结果会动态添加到这里 -->
+                                </ul>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- 定位与数量 -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="area-info">
+                    <span style="color:#2980b9">当前城市:</span>
+                    <span style="color:#e74c3c">北京</span>
+                    &nbsp
+                    <span style="color:#2980b9">房源总数:</span>
+                    <span style="color:#e74c3c">{{ num }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 当前城市房源 -->
+        <div class="row info-line">
+            <!-- 模块标题 -->
+            <div class="col-lg-12 tj-header">
+                <h3>为您为家</h3>
+                <div class="describe">
+                    <span>为您精准定位，当前城市房源信息</span>
+                    <span class="float-right"><a href="/list/pattern/1"
+                            style="color: #3498db; padding-right: 5px">更多北京房源</a></span>
+                </div>
+            </div>
+            <!-- 模块内容 -->
+            {% for house in house_new_list %}
+            <div class="col-lg-4">
+                <div class="course">
+                    <div><a href="/house/{{ house.id }}"><img class='img-fluid img-box' src="/static/img/house-bg1.jpg"
+                                alt="{{ house.title }}"></a></div>
+                    <div class="course-info">
+                        <span>{{ house.address }}</span>
+                    </div>
+                    <div class="course-info1">
+                        <span>{{ house.rooms }} - {{ house.area }}平方米</span>
+                        <span class="price float-right">￥&nbsp{{ house.price }}</span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <hr>
+
+        <!-- 热点推荐 -->
+        <div class="row info-line">
+            <!-- 模块标题 -->
+            <div class="col-lg-12 tj-header">
+                <h3>为您推荐</h3>
+                <div class="describe">
+                    <span>热点房源，我们为你精选</span>
+                    <span class="float-right"><a href="/list/hot_house/1"
+                            style="color: #3498db; padding-right: 5px">更多热点房源</a></span>
+                </div>
+            </div>
+            <!-- 模块内容 -->
+            {% for house in house_hot_list %}
+            <div class="col-lg-3">
+                <div class="course">
+                    <div><a href="/house/{{ house.id }}"><img class='img-fluid img-box' src="/static/img/house-bg1.jpg"
+                                alt="{{ house.title }}"></a></div>
+                    <div class="course-info">
+                        <span>{{ house.address }}</span>
+                    </div>
+                    <div class="course-info1">
+                        <span>{{ house.rooms }} - {{ house.area }}平方米</span>
+                        <span style="color: #3498db">&nbsp&nbsp<i class="fa fa-heart" aria-hidden="true">&nbsp热度{{
+                                house.page_views }}</i></span>
+                        <span class="price float-right">￥{{ house.price }}</span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- 注册登录 -->
+        <div class="row info-line">
+            <div class="col-lg-8 col-md-10 mx-auto">
+                <!-- 注册窗口 -->
+                <div id="register" class="modal fade login_form" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-body m-header">
+                                <button class="close" data-dismiss="modal">
+                                    <span>&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-title">
+                                <h1 class="text-center">注册</h1>
+                            </div>
+                            <div class="modal-body">
+                                <form class="form-group" id="registeform" action="/register" method="post">
+                                    <div class="form-group">
+                                        <label for="reg_username" class="form-info">用户名</label>
+                                        <input class="form-control" id="reg_username" name="username" type="text"
+                                            placeholder="6-15位字母或数字" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="reg_password" class="form-info">密码</label>
+                                        <input class="form-control" id="reg_password" name="password" type="password"
+                                            placeholder="至少6位字母或数字" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="reg_confirm" class="form-info">再次输入密码</label>
+                                        <input class="form-control" id="reg_confirm" name="confirmPassword" type="password"
+                                            placeholder="至少6位字母或数字" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="reg_email" class="form-info">邮箱</label>
+                                        <input class="form-control" id="reg_email" name="email" type="email"
+                                            placeholder="输入您的邮箱" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="reg_code" class="form-info">邮箱验证码</label>
+                                        <div class="input-group">
+                                            <input class="form-control" id="reg_code" name="email_code" type="text" placeholder="请输入邮箱验证码" required>
+                                            <div class="input-group-append">
+                                                <button class="btn btn-secondary" type="button" id="send-reg-code-btn">发送验证码</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <button class="btn btn-primary" id='registe-btn' type="button">提交</button>
+                                        <button class="btn btn-danger" data-dismiss="modal">取消</button>
+                                    </div>
+                                    <a href="javascript:;" data-toggle="modal" data-dismiss="modal" data-target="#login"
+                                        class="switch-info">已有账号？点我登录</a>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 登录窗口 -->
+                <div id="login" class="modal fade login_form">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-body m-header">
+                                <button class="close" data-dismiss="modal">
+                                    <span>&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-title">
+                                <h1 class="text-center">登录</h1>
+                            </div>
+                            <div class="modal-body">
+                                <form class="form-group" id="loginform" action="/login" method="post">
+                                    <div class="form-group">
+                                        <label for="login_username" class="form-info">用户名</label>
+                                        <input class="form-control" id="login_username" name="username" type="text" placeholder="" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="login_password" class="form-info">密码</label>
+                                        <input class="form-control" id="login_password" name="password" type="password" placeholder="" required>
+                                    </div>
+                                    <div class="text-right">
+                                        <button class="btn btn-primary" id='login-btn' type="button">登录</button>
+                                        <button class="btn btn-danger" data-dismiss="modal">取消</button>
+                                    </div>
+                                    <a href="javascript:;" data-toggle="modal" data-dismiss="modal" data-target="#register"
+                                        class="switch-info">还没有账号？点我注册</a>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-md-10 mx-auto">
+                    <p class="copyright text-muted">Copyright &copy; 二手好房 2019</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="/static/vendor/jquery/jquery.min.js"></script>
+    <script src="/static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.bootcss.com/jquery.bootstrapvalidator/0.5.3/js/bootstrapValidator.min.js"></script>
+    <script src="/static/js/login.js"></script>
+
+    <!-- Custom scripts -->
+    <script src="/static/js/clean-blog.min.js"></script>
+    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts-stat/ecStat.min.js"></script>
+    <script src="/static/js/echarts.min.js"></script>
+
+
+    <script>
+        // 搜索类型切换（地区/户型）
+        $(".chanle1").on('click', function () {
+            if (!$(this).hasClass('active')) {
+                $(".chanle2").removeClass('active');
+                $(this).addClass('active');
+                $("#txt").attr('name', 'addr');
+                $('#txt').attr('placeholder', '请输入区域、商圈或小区名开始找房');
+            }
+        });
+
+        $(".chanle2").on('click', function () {
+            if (!$(this).hasClass('active')) {
+                $(".chanle1").removeClass('active');
+                $(this).addClass('active');
+                $("#txt").attr('name', 'rooms');
+                $('#txt').attr('placeholder', '请输入户型开始找房，例如:1室1厅');
+            }
+        });
+
+
+        // 输入框联想逻辑
+        var oTxt = document.getElementById('txt');
+        var oBtn = document.getElementById('btn');
+        var oList = document.getElementById('list');
+        var cpLock = false; // 中文输入锁
+
+        // 中文输入开始（锁定输入框）
+        $('#txt').on('compositionstart', function () {
+            cpLock = true;
+        });
+
+        // 中文输入结束（解锁输入框）
+        $('#txt').on('compositionend', function () {
+            cpLock = false;
+            var keyWord = $.trim(oTxt.value);
+            if (keyWord) {
+                searchByIndexOf(keyWord);
+            } else {
+                oList.innerHTML = '';
+            }
+        });
+
+        // 英文/数字输入
+        $('#txt').on('input', function () {
+            if (!cpLock) {
+                var keyWord = $.trim(oTxt.value);
+                if (keyWord) {
+                    searchByIndexOf(keyWord);
+                } else {
+                    oList.innerHTML = '';
+                }
+            }
+        });
+
+
+        // 发送搜索请求
+        function searchByIndexOf(keyWord) {
+            var activeType = $(".my-nav-tab li.active span").text();
+            var data = { "kw": keyWord, "info": activeType };
+
+            $.ajax({
+                url: "/search/keyword/",
+                type: 'post',
+                dataType: 'json',
+                data: data,
+                success: function (data) {
+                    oList.innerHTML = '';
+                    if (data.code === 0) {
+                        return;
+                    }
+                    if (data.code === 1) {
+                        var list = data.info;
+                        list.forEach(function (item) {
+                            var li = document.createElement('li');
+                            li.className = "list-group-item li_style";
+                            li.setAttribute("title", item.t_name);
+                            li.innerHTML = item.t_name + 
+                                '<span class="badge float-right">大约有' + item.num + '套房</span>';
+                            oList.appendChild(li);
+                        });
+                    }
+                },
+                error: function () {
+                    console.error("搜索请求失败");
+                }
+            });
+        }
+
+
+        // 点击联想结果填入输入框
+        $(document).on('click', '.li_style', function () {
+            var tName = $(this).attr('title');
+            $('#txt').val(tName);
+            $('#list').empty();
+        });
+
+
+        // 退出登录功能
+        $('#logout').on('click', function () {
+            if (confirm("确定要退出登录吗？")) {
+                window.location.href = "/logout";
+            }
+        });
+
+
+        // 表单提交前验证
+        $('#my-form').on('submit', function () {
+            var keyWord = $.trim($('#txt').val());
+            if (!keyWord) {
+                alert("请输入搜索内容");
+                return false;
+            }
+            return true;
+        });
+
+
+        // 为输入框添加键盘事件（回车提交）
+        $('#txt').on('keydown', function (e) {
+            if (e.keyCode === 13) {  // 回车键
+                e.preventDefault();  // 阻止默认行为
+                $('#my-form').submit();  // 提交表单
+            }
+        });
+
+
+        // 点击空白处关闭联想列表
+        $(document).on('click', function (e) {
+            if (!$(e.target).closest('#my-form').length) {
+                $('#list').empty();
+            }
+        });
+    </script>
+</body>
+
+</html>

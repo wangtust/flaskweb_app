@@ -1,0 +1,237 @@
+/* ===== 全局样式 ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Poppins", sans-serif;
+    background: linear-gradient(135deg, #be0979, hsl(56, 90%, 45%) 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+a {
+    color: #4a54e6;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+a:hover {
+    color: #3a45d6;
+    text-decoration: underline;
+}
+
+/* ===== 注册容器 ===== */
+.register-container {
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    padding: 45px;
+    width: 420px;
+    max-width: 90%;
+    transition: all 0.3s ease;
+}
+
+.register-container:hover {
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.15);
+    transform: translateY(-5px);
+}
+
+h2 {
+    color: #333;
+    font-size: 24px;
+    margin-bottom: 35px;
+    text-align: center;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+/* ===== 表单样式 ===== */
+.form-group {
+    margin-bottom: 22px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #555;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 14px 18px;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    font-size: 15px;
+    outline: none;
+    transition: all 0.3s ease;
+    background-color: #f9f9f9;
+}
+
+.form-group input:focus {
+    border-color: #4a54e6;
+    box-shadow: 0 0 0 3px rgba(74, 84, 230, 0.15);
+    background-color: white;
+}
+
+/* ===== 按钮样式 ===== */
+.btn-primary {
+    background: linear-gradient(135deg, #4a54e6, #6a54e6);
+    color: white;
+    padding: 14px 28px;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    box-shadow: 0 4px 12px rgba(74, 84, 230, 0.25);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-primary:hover {
+    box-shadow: 0 6px 16px rgba(74, 84, 230, 0.35);
+    transform: translateY(-2px);
+}
+
+.btn-primary:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 8px rgba(74, 84, 230, 0.3);
+}
+
+/* ===== 底部链接 ===== */
+.text-center {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+    color: #666;
+}
+
+.text-center a {
+    font-weight: 500;
+}
+
+/* ===== 响应式设计 ===== */
+@media (max-width: 500px) {
+    .register-container {
+        padding: 35px;
+        border-radius: 16px;
+    }
+    
+    h2 {
+        font-size: 22px;
+        margin-bottom: 25px;
+    }
+    
+    .form-group {
+        margin-bottom: 18px;
+    }
+    
+    .form-group input {
+        padding: 12px 16px;
+        font-size: 14px;
+    }
+    
+    .btn-primary {
+        padding: 12px 24px;
+        font-size: 15px;
+    }
+    
+    .text-center {
+        font-size: 13px;
+    }
+}
+
+/* register.css - 注册页面样式 */
+
+/* 密码输入框容器 */
+.password-input-container {
+    position: relative;
+}
+
+/* 密码可见性切换按钮 */
+.toggle-password {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #999;
+    transition: color 0.3s;
+}
+
+.toggle-password:hover {
+    color: #333;
+}
+
+/* 密码可见时的图标样式 */
+.show-password .fa-eye-slash::before {
+    content: "\f06e"; /* Font Awesome 眼睛图标 */
+}
+
+/* register.css 中新增 */
+.error-message {
+    color: red;          /* 红色文字，醒目 */
+    font-size: 0.85em;   /* 稍小字体 */
+    margin: 4px 0 0 0;   /* 顶部间距，避免紧贴输入框 */
+    min-height: 1.2em;   /* 固定高度，防止输入时布局跳动 */
+}
+
+/* 验证码输入框与发送按钮的容器样式 */
+.verification-container {
+    display: flex;
+    gap: 10px; /* 输入框与按钮之间的间距 */
+    margin-top: 8px; /* 与上方邮箱输入框的间距 */
+}
+
+/* 验证码输入框样式 */
+#verify_code {
+    flex: 1; /* 占满剩余空间，适配不同屏幕宽度 */
+    padding: 8px 12px; /* 内边距，与其他输入框保持一致 */
+    border: 1px solid #ddd; /* 边框样式，与其他输入框统一 */
+    border-radius: 4px; /* 圆角，与其他元素统一 */
+    font-size: 1em; /* 字体大小 */
+    box-sizing: border-box; /* 确保padding不影响整体宽度 */
+}
+
+/* 发送验证码按钮样式 */
+#send_code_btn {
+    padding: 8px 16px; /* 内边距，适中大小 */
+    background-color: #4285f4; /* 按钮背景色（示例：谷歌蓝，可自行调整） */
+    color: white; /* 文字颜色 */
+    border: none; /* 去掉默认边框 */
+    border-radius: 4px; /* 圆角 */
+    cursor: pointer; /* 鼠标悬停时显示手型 */
+    font-size: 0.9em; /* 字体稍小 */
+    transition: background-color 0.3s; /*  hover效果过渡 */
+}
+
+/* 按钮禁用状态（倒计时时） */
+#send_code_btn:disabled {
+    background-color: #cccccc; /* 灰色，表示不可点击 */
+    cursor: not-allowed; /* 禁用状态鼠标样式 */
+}
+
+/* 按钮 hover 效果（非禁用时） */
+#send_code_btn:not(:disabled):hover {
+    background-color: #3367d6; /* 深色一点，增强交互感 */
+}
+
+/* 错误提示统一样式（如果之前没设置） */
+.error-message {
+    color: red;
+    font-size: 0.85em;
+    margin: 4px 0 0 0;
+    min-height: 1.2em;
+}

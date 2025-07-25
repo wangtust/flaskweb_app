@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>注册 - Chatbot</title>
+    <link rel="stylesheet" href="../static/register.css">
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="login-container">
+        <h2>创建账户</h2>
+        <form method="POST" action="{{ url_for('auth.register') }}">
+            <!-- 用户名输入框 + 错误提示 -->
+            <div class="form-group">
+                <label for="username">用户名</label>
+                <input type="text" id="username" name="username" required>
+                <!-- 新增：用户名错误提示 -->
+                <p id="username-error" class="error-message"></p>
+            </div>
+
+            <!-- 邮箱输入框 + 验证码区域（合并为一个form-group，删除重复部分） -->
+            <div class="form-group">
+                <label for="email">邮箱</label>
+                <!-- 仅保留一个邮箱输入框 -->
+                <input type="email" id="email" name="email" required>
+
+                <!-- 新增：验证码输入框和发送按钮 -->
+                <div style="display: flex; gap: 10px; margin-top: 8px;">
+                    <input type="text" id="verify_code" name="verify_code" placeholder="请输入验证码" required
+                        style="flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                    <button type="button" id="send_code_btn" class="btn-secondary">
+                        发送验证码
+                    </button>
+                </div>
+                <!-- 验证码错误提示（包含邮箱格式、验证码相关错误） -->
+                <p id="email-error" class="error-message"></p>
+            </div>
+
+            <!-- 密码输入框 + 错误提示 -->
+            <div class="form-group">
+                <label for="password">密码</label>
+                <div class="password-input-container">
+                    <input type="password" id="password" name="password" required>
+                    <button type="button" id="toggle-password" class="toggle-password">
+                        <i class="fa fa-eye-slash"></i>
+                    </button>
+                </div>
+                <!-- 新增：密码错误提示 -->
+                <p id="password-error" class="error-message"></p>
+            </div>
+
+            <!-- 确认密码输入框 + 错误提示 -->
+            <div class="form-group">
+                <label for="confirm_password">确认密码</label>
+                <div class="password-input-container">
+                    <input type="password" id="confirm_password" name="confirm_password" required>
+                    <button type="button" id="toggle-confirm-password" class="toggle-password">
+                        <i class="fa fa-eye-slash"></i>
+                    </button>
+                </div>
+                <!-- 新增：确认密码错误提示 -->
+                <p id="confirm-password-error" class="error-message"></p>
+            </div>
+
+            <button type="submit" class="btn-primary">注册</button>
+        </form>
+        <p class="text-center mt-3">
+            已有账户? <a href="{{ url_for('auth.login') }}">登录</a>
+        </p>
+    </div>
+
+    <script src="../static/register.js"></script>
+</body>
+
+</html>

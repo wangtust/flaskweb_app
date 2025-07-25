@@ -1,0 +1,189 @@
+/* ===== 全局样式 ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Poppins", sans-serif;
+    background: linear-gradient(135deg, #be0979, hsl(56, 90%, 45%) 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+a {
+    color: #007bff;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+
+/* ===== 登录容器 ===== */
+.login-section {
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    padding: 40px;
+    width: 400px;
+    max-width: 90%;
+    transition: all 0.3s ease;
+}
+
+.login-section:hover {
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+    transform: translateY(-5px);
+}
+
+.login-container {
+    width: 100%;
+}
+
+h2 {
+    color: #333;
+    font-size: 24px;
+    margin-bottom: 30px;
+    text-align: center;
+    letter-spacing: 1px;
+}
+
+/* ===== 表单样式 ===== */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #555;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 16px;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus {
+    border-color: #4a54e6;
+    box-shadow: 0 0 0 3px rgba(74, 84, 230, 0.2);
+}
+
+/* ===== 按钮样式 ===== */
+.btn-primary {
+    background-color: #4a54e6;
+    color: white;
+    padding: 14px 28px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(74, 84, 230, 0.3);
+    width: 100%;
+}
+
+.btn-primary:hover {
+    background-color: #3a45d6;
+    box-shadow: 0 6px 12px rgba(74, 84, 230, 0.4);
+    transform: translateY(-2px);
+}
+
+/* ===== 底部链接 ===== */
+.text-center {
+    text-align: center;
+}
+
+.mt-3 {
+    margin-top: 10px;
+}
+
+.text-center a {
+    color: #4a54e6;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.text-center a:hover {
+    color: #3a45d6;
+    text-decoration: underline;
+}
+
+/* ===== 响应式设计 ===== */
+@media (max-width: 500px) {
+    .login-section {
+        padding: 30px;
+        border-radius: 15px;
+    }
+    
+    h2 {
+        font-size: 22px;
+    }
+    
+    .form-group input {
+        padding: 10px 14px;
+        font-size: 14px;
+    }
+    
+    .btn-primary {
+        padding: 12px 24px;
+        font-size: 15px;
+    }
+}
+
+/* 错误消息样式 */
+.flash-message {
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    text-align: center;
+}
+
+.flash-message.error {
+    background-color: #ffebee;
+    color: #b71c1c;
+    border: 1px solid #ef9a9a;
+}
+
+/* 密码输入框容器 */
+.password-input-container {
+    position: relative;
+}
+
+/* 密码可见性切换按钮 */
+.toggle-password {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #999;
+    transition: color 0.3s;
+}
+
+.toggle-password:hover {
+    color: #333;
+}
+
+/* 密码可见时的图标样式 */
+.show-password .fa-eye-slash::before {
+    content: "\f06e"; /* Font Awesome 眼睛图标 */
+}

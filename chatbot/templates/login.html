@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录 - Chatbot</title>
+    <link rel="stylesheet" href="../static/login.css">
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <section class="login-section">
+        <div class="login-container">
+            <!-- 消息显示区域 -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="flash-message {{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            
+            <h2>用户登录</h2>
+            <form method="POST" action="{{ url_for('auth.login') }}">
+                <div class="form-group">
+                    <label for="username">用户名</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">密码</label>
+                    <div class="password-input-container">
+                        <input type="password" id="password" name="password" required>
+                        <button type="button" id="toggle-password" class="toggle-password">
+                            <i class="fa fa-eye-slash"></i>
+                        </button>
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary">登录</button>
+            </form>
+            <p class="text-center mt-3">
+                没有账户? <a href="{{ url_for('auth.register') }}">注册</a>
+            </p>
+        </div>
+    </section>
+    
+    <!-- 新增：引入外部JS文件 -->
+    <script src="../static/login.js"></script>
+</body>
+
+</html>
